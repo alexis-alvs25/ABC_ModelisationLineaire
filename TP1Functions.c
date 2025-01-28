@@ -101,6 +101,19 @@ int KP_LP(dataSet* dsptr)
 	}
 
 	double * xbar = malloc(dsptr->n * sizeof(double));
+	int rval = 0;
+	int b=dsptr->b;
+	int j;
+	int temp;
+	for(j=0; j<dsptr->n; j++){
+		if(b==0) {
+			return rval;
+		};
+		temp=b/dsptr->a[j];
+		x[j]=1<temp?1:temp;
+		b=b-x[j]*dsptr->a[j];
+	};
+
 
 	return rval;
 }
