@@ -23,6 +23,12 @@ typedef struct dataSet
 
 } dataSet;
 
+typedef struct solution {
+   double value;
+   double * xbar;
+   int size;
+   int * order;
+    } solution;
 /**
 * @brief Compute the objectiv value of the given x solution vector (for exact solution), for the given data set
 * @param x the solution vector
@@ -41,7 +47,10 @@ int objectivValue(int *x, dataSet *data);
 double objectivRelaxed(double *x, dataSet *data);
 
 
-
+solution * withPreprocessing(dataSet *data);
+solution *KP_greedy(dataSet* dsptr);
+solution * KP_LP(dataSet* dsptr);
+int sumWeight(int n, int * a);
 
 
 #endif //TP3FUNCTIONS_H
