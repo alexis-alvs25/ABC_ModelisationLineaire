@@ -211,13 +211,14 @@ void benchmark(int n, int b, int iteration)
 	char * greed = "__greedy_";
 	int i = 1;
 	dataSet data;
+	int seed = 42;
 	for(i = 1 ; i < iteration/2 ; i++)
 	{
 		strcpy(base,basei);
 		sprintf(index, "%d", i);
 		
 		strcat(base,index);
-		create_instance(base, 42,b,-1);
+		create_instance(base, ++seed,b,-1);
 		FILE * fin = fopen(base,"r");
 
 		read_TP1_instance(fin,&data);
@@ -246,7 +247,7 @@ void benchmark(int n, int b, int iteration)
 		strcpy(base,basei);
 		sprintf(index, "%d", i);	
 		strcat(base,index);
-		create_instance(base, 42,-1,n);
+		create_instance(base, ++seed,-1,n);
 		FILE * fin = fopen(base,"r");
 		read_TP1_instance(fin,&data);
 		fclose(fin);
