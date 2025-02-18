@@ -1,0 +1,6 @@
+*.o
+./TP1/TP1
+./notes
+./.gitignore
+./TP1/benchmark/*
+!./TP1/benchmark/
