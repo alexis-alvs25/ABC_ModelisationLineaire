@@ -8,3 +8,4 @@
 !./TP1/benchmark/
 *.xml
 *.csv
+*.sol
