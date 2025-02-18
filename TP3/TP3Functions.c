@@ -3,8 +3,7 @@
 //
 
 #include "TP3Functions.h"
-#include "TP2Functions.h"
-#include "TP1Functions.h"
+#include "../TP1/TP1Functions.c"
 #include <stdio.h>
 #include <stdlib.h>
 
