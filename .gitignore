@@ -1,6 +1,10 @@
 *.o
 ./TP1/TP1
+./TP4/TP4
+./TP2/TP2
+./TP3/TP3
 ./notes
-.gitignore
 ./TP1/benchmark/*
 !./TP1/benchmark/
+*.xml
+*.csv
