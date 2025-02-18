@@ -17,7 +17,7 @@ int main(int argc, char **argv)
         snprintf(       instance_file,
                         1024,
                         "%s",
-                        "instance.csv");
+                        "instance1.csv");
 
 	char c;
         while ((c=getopt (argc, argv,"F:h")) != EOF)
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 
 	//Open the instance file
 	FILE* fin = fopen(instance_file,"r");
-	read_TP2_instance(fin,&data);
+	read_TP1_instance(fin,&data);
 	fclose(fin);
 
 	//execute your solution methods on the instance you just read

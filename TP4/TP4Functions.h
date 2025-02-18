@@ -75,5 +75,7 @@ typedef struct dataSet
 
 int read_TP2_instance(FILE*fin,dataSet* dsptr);
 int solve_2DKP(dataSet* dsptr);
-
+int solve_1DKP(dataSet * dpstr);
+int read_TP1_instance(FILE*fin,dataSet* dsptr);
+void create_instance(char * filePath,int seed, int b, int g, int n);
 
