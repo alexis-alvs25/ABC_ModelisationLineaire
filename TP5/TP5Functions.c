@@ -6,8 +6,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <float.h>
 
 #define MAX_COST 10
+#define MAX(a,b) ((a) > (b) ? (a) : (b))
 
 int read_TP5_instance(FILE*fin,dataSet* dsptr)
 {
@@ -23,7 +25,7 @@ int read_TP5_instance(FILE*fin,dataSet* dsptr)
 	dsptr->g = g;
 
 	dsptr->n = n;
-	dsptr->c = (int*)malloc(sizeof(int)*n);
+	dsptr->c = (double*)malloc(sizeof(double)*n);
 	dsptr->a = (int*)malloc(sizeof(int)*n);
 	dsptr->f = (int*)malloc(sizeof(int)*n);
 
@@ -87,9 +89,9 @@ void triSelec(dataSet* dsptr, double * utility, int * order)
     }
 }
 
-solution * create_solution(double * xbar, dataSet * dsptr, int * order)
+solution create_solution(int * xbar, dataSet * dsptr)
 {
-	solution * sol = malloc(sizeof(solution));
+	solution sol = malloc(sizeof(solution));
 	sol->xbar = xbar;
 	sol->value = 0;
 	for(int i = 0 ; i < dsptr->n ; i++)
@@ -97,11 +99,12 @@ solution * create_solution(double * xbar, dataSet * dsptr, int * order)
 		sol->value += dsptr->c[i] * xbar[i];
 	}
 	sol->size = dsptr->n;
-	sol->order = order;
+	sol->xbark = NULL;
+	sol->zbark = NULL;
 	return sol;
 }
 
-void print_solution(solution * sol)
+void print_solution(solution sol)
 {
 	printf("Value : %lf\nWith variable : ",sol->value);
 	for(int i = 0 ; i < sol->size - 1; i++)
@@ -118,14 +121,22 @@ void free_dataSet(dataSet * set)
 	free(set->c);
 }
 
-void free_solution(solution * sol)
+void free_solution(solution sol)
 {
 	free(sol->xbar);
-	free(sol->order);
+	if(sol->xbark != NULL)
+	{
+		free(sol->xbark);
+	}
+	if(sol->zbark != NULL)
+	{
+		free(sol->zbark);
+	}
 	free(sol);
+	
 }
 
-void print_solution_csv(solution * sol, const char * path)
+void print_solution_csv(solution sol, const char * path)
 {
 	FILE * f = fopen(path,"w");
 		fprintf(f,"objective,%lf;\n",sol->value);
@@ -139,9 +150,146 @@ void print_solution_csv(solution * sol, const char * path)
 
 }
 
-solution knapsack2d(dataSet* dpstr,double step,double epsilon)
-{
+solution KP_dynamic(dataSet * data) {
+	
+	int i;
+	int * Z = (int *)calloc((data->b + 1), sizeof(int));
+	int * Z_temp = (int *)calloc((data->b + 1), sizeof(int));
+	int * D = (int *)calloc((data->b + 1), sizeof(int));
 
+	for (int k = 0; k < data->n; k++) {
+		for (i = data->b; i >= data->a[k]; i--) {
+			Z_temp[i] = Z[i];
+		}
+		for (i = data->a[k]; i <= data->b; i++) {
+			if (Z_temp[i - data->a[k]] + data->c[k] > Z_temp[i]) {
+				D[i] = k + 1;
+				Z[i] = MAX(Z_temp[i], Z_temp[i - data->a[k]] + data->c[k]);
+			}
+		}
+	}
+
+	int * x = (int *)calloc(data->n, sizeof(int));
+
+	i = data->b;
+	
+	while (i > 0) {
+		while (Z[i] == Z[i - 1]) {
+			i--;
+		}
+		x[D[i] - 1] = 1;
+		i -= data->a[D[i] - 1];
+	}
+
+	// Affichage des résultats
+	printf("Valeur maximale : %d", Z[data->b]);
+	printf("\nTableau Z = ");
+	for (int j = 0; j <= data->b; j++) {
+		printf("%d ", Z[j]);
+	}
+	printf("\nTableau D = ");
+	for (int j = 0; j <= data->b; j++) {
+		printf("%d ", D[j]);
+	}
+
+	printf("\n");
+    printf("Objets sélectionnés : ");
+    for (int j = 0; j < data->n; j++) {
+        if (x[j]) {
+            printf("%d ", j + 1);
+        }
+    }
+    printf("\n");
+
+	free(Z);
+	free(Z_temp);
+	free(D);
+	return create_solution(x,data);
+}
+
+int isfeasible(solution sol, dataSet * dpstr)
+{
+	int sum = 0;
+	for(int i = 0 ; i < dpstr->n ; i++)
+	{
+		sum += sol->xbar[i] *  dpstr->f[i];
+		if(dpstr->g - sum < 0)
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
+double zxk(solution sol, dataSet * dpstr)
+{
+	double z = 0;
+	for(int i = 0 ; i < dpstr->n ; i++)
+	{
+		z += sol->xbar[i] * dpstr->c[i];
+	}
+	return z;
+}
+
+solution knapsack2d(dataSet* dpstr,double * step,int size,double epsilon)
+{
+	int * xbar = malloc(dpstr->n * sizeof(int));
+	double zbar = DBL_MAX;
+	double zx = 0;
+	int k = 0;
+	double lambda = 0;
+	dataSet * tmpdata = malloc(sizeof(dataSet));
+	double * tmpcost = malloc(dpstr->n * sizeof(double));
+	int ** xbark = malloc(size * sizeof(int *));
+	double * zbark = malloc(size * sizeof(double));
+
+	while(step[k] >epsilon && zbar -zx > epsilon)
+	{
+		if(k >= size)
+		{
+			exit(-1);
+		}
+		tmpdata->n = dpstr->n;
+		tmpdata->b = dpstr->b;
+		tmpdata->a = dpstr->a;
+		for(int i = 0 ; i < dpstr->n ;i++)
+		{
+			tmpcost[i] = (double) dpstr->c[i] - lambda * (double)dpstr->f[i]; 
+		}
+		tmpdata->c = tmpcost;
+		solution sol = KP_dynamic(tmpdata);
+		xbark[k] = malloc(dpstr->n * sizeof(double));
+		for(int i = 0 ; i < dpstr->n ; i++)
+		{
+			xbark[k][i] = sol->xbar[i];
+		}
+		zbark[k] = sol->value;
+		if(isfeasible(sol,dpstr) && zxk(sol,dpstr) > zx)
+		{
+			xbar = xbark[k];
+		}
+		if(zbark[k] < zbar)
+		{
+			zbar = zbark[k];
+		}
+		
+		double gamma = (double)dpstr->g;
+		for(int i = 0 ; i < dpstr->n ; i++)
+		{
+			gamma -= xbark[k][i]*dpstr->f[i];
+		}
+
+        lambda = lambda - step[k] * gamma > 0 ? lambda - step[k] * gamma > 0 : 0;
+		k++;
+		free_solution(sol);
+	}
+	free(tmpdata);
+	free(tmpcost);
+	
+	solution sol = create_solution(xbark[k-1],dpstr);
+	sol->zbark = zbark;
+	sol-> xbark = xbark;
+	return sol;
 }
 
 /*void benchmark(int n, int b, int iteration)

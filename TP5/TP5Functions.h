@@ -21,7 +21,7 @@ typedef struct dataSet
 	int g;
 
 	//Tableau d'entiers de taille n contenant la valeur de chacun des objets
-	int*c;
+	double*c;
 	//Tableau d'entiers de taille n contenant le poids de chacun des objets
 	int*a;
 	//Tableau d'entiers de taille n contenant le poids #2 de chacun des objets
@@ -31,17 +31,18 @@ typedef struct dataSet
 
 typedef struct solution {
 	double value;
-	double * xbar;
+	int * xbar;
 	int size;
-	int * order;
-} solution;
+	int ** xbark;
+	double * zbark;
+} * solution;
 
 int read_TP5_instance(FILE*fin,dataSet* dsptr);
-void print_solution(solution * sol);
-solution knapsack2d(dataSet* dpstr,double step,double epsilon);
+void print_solution(solution sol);
+solution knapsack2d(dataSet* dpstr,double * step, int k,double epsilon);
 void create_instance(char * filePath,int seed, int b, int g, int n);
 void free_dataSet(dataSet * set);
-void free_solution(solution * sol);
+void free_solution(solution sol);
 //void benchmark(int n, int b, int iteration);
 
 
