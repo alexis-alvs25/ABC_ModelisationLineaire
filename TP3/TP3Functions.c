@@ -6,8 +6,11 @@
 #include "../TP1/TP1Functions.h"
 #include <stdio.h>
 #include <stdlib.h>
-solution * preprocessing(dataSet *data)
+dataSet  preprocessing(dataSet *data)
 {
+
+    dataSet newData;
+    newData.b=data->b;
     solution* sol_greed  = KP_greedy(data);
     solution * ideal = KP_LP(data);
     int j,p;
@@ -15,7 +18,7 @@ solution * preprocessing(dataSet *data)
 
     printf("L'algorithme glouton donne : %f\n, la relaxation linéaire : %f\n", sol_greed->value, ideal->value);
     p=0;
-    int numberOfObject = 0;
+    int numberOfObject = data->n;
 
     while(data->b>sumWeight(p, data->a)){
 		p++;
@@ -37,11 +40,12 @@ solution * preprocessing(dataSet *data)
             fixed0[j]=0;
             fixed1[j]=1;
             data->b-=data->a[j];
-            numberOfObject++;
+            numberOfObject--;
           }
           else{
             printf("2\n");
             sol_greed->xbar[j]=0;
+            numberOfObject--;
             fixed0[j]=1;
             fixed1[j]=0;
             data->b-=data->a[j];
@@ -55,13 +59,40 @@ solution * preprocessing(dataSet *data)
     for(j=0; j<data->n; j++){
       printf("lists %d : %d %d\n",j,fixed0[j],fixed1[j]);
     }
-    dataSet newData;
-    newData.n = data->n;
-    newData.b = data->b;
+    int k=0;
+    newData.n = numberOfObject;
+    printf("datab : %d\n\n",data->b);
+    for(j=0; j<data->n; j++){
+      if(fixed1[j]){
+        printf("%d %d\n",j , data->a[j]);
+        newData.b-=data->a[j];
+        }
+    }
     newData.c = (int*)malloc(sizeof(int)*numberOfObject);
+    if(newData.c==NULL){
+      printf("Erreur d'allocation de c\n");
+      exit(-1);
+    }
+    for(j=0; j<data->n; j++){
+      if(!fixed0[j]&&!fixed1[j]){
+        newData.c[k]=data->c[j];
+        k++;
+        }
+    }
     newData.a = (int*)malloc(sizeof(int)*numberOfObject);
 
-    return sol_greed;
+    if(newData.a==NULL){
+      printf("Erreur d'allocation\n");
+      exit(-1);
+    }
+    k=0;
+    for(j=0; j<data->n; j++){
+      if(!fixed0[j]&&!fixed1[j]){
+        newData.a[k]=data->a[j];
+        k++;
+        }
+    }
+    return newData;
 }
 
 
@@ -80,5 +111,4 @@ void recalcSol(solution * sol, dataSet *data){
       z+=sol->xbar[i]*data->c[i];
   }
   sol->value = z;
-
 }

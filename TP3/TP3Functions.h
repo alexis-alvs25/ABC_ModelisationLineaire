@@ -27,7 +27,7 @@ int objectivValue(int *x, dataSet *data);
 double objectivRelaxed(double *x, dataSet *data);
 
 
-solution * withPreprocessing(dataSet *data);
+dataSet  preprocessing(dataSet *data);
 int sumWeight(int n, int * a);
 
 /**
