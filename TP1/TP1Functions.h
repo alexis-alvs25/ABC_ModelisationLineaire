@@ -36,9 +36,9 @@ int read_TP1_instance(FILE*fin,dataSet* dsptr);
 solution * KP_greedy(dataSet* dsptr);
 solution * KP_LP(dataSet* dsptr);
 void print_solution(solution * sol);
-void create_instance(char * filePath,int seed, int b,int n);
+void create_instance_file(char * filePath,int seed, int b,int n);
 void free_dataSet(dataSet * set);
 void free_solution(solution * sol);
-void benchmark(int n, int b, int iteration);
+void benchmark(int n, int b, int iteration,int seed);
 
 
