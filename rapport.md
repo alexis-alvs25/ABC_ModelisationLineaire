@@ -9,7 +9,7 @@ Cf fonction KP_LP (modifiée pour renvoyer une structure représentant mieux le 
 ### Question 3 :
 Cf fonction KP_Greedy (même modification que précédemment).
 ### Question 4 :
-On cherche à savoir comment $n$ et $b$ affectent la compléxité, comme le pire cas est que $b$ soit grand et que tout les objets soient alors parcourus on en déduis que $b$ a bien un impact sur la complexité mais le nombre d'itération reste borné au pire cas par $n$. On peut alors simplifier la compléxité en $O(n +tri)$. Comme dans l'implémentation, on utilise un tri fusion afin de pouvoir plus facilement tracer les variables et on a donc une compléxité en $O(n^2)$.
+On cherche à savoir comment $n$ et $b$ affectent la compléxité, comme le pire cas est que $b$ soit grand et que tout les objets soient alors parcourus, on en déduis que $b$ a bien un impact sur la complexité mais le nombre d'itération reste borné au pire cas par $n$. On peut alors simplifier la compléxité en $O(n +tri)$. Comme dans l'implémentation, on utilise un tri fusion afin de pouvoir plus facilement tracer les variables et on a donc une compléxité en $O(n^2)$.
 #### 1)
 TODO : Inserer graphe
 #### 2)
@@ -17,6 +17,8 @@ TODO : Inserer graphe
 
 ### Conclusion TP1 :
 TODO
+
+---
 
 ## TP2
 ### Question 1 :
@@ -30,6 +32,8 @@ TODO
 TODO
 ### Conclusion TP2 :
 TODO
+
+---
 
 ## TP3
 ### Question 1 :
