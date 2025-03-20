@@ -1,3 +1,6 @@
+#ifndef TP1FUNCTIONS_H
+#define TP1FUNCTIONS_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -41,4 +44,4 @@ void free_dataSet(dataSet * set);
 void free_solution(solution * sol);
 void benchmark(int n, int b, int iteration,int seed);
 
-
+#endif

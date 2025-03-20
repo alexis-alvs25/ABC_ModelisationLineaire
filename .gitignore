@@ -1,13 +1,4 @@
 *.o
-TP1/TP1
-TP4/TP4
-TP2/TP2
-TP3/TP3
-TP5/TP5
-./notes
-./TP1/benchmark/*
-!./TP1/benchmark/
-*.xml
-*.csv
-*.sol
-*.lp
+TP1
+.idea/
+**/*.DS_Store
