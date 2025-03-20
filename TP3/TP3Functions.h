@@ -28,9 +28,12 @@ double objectivRelaxed(double *x, dataSet *data);
 
 
 solution * withPreprocessing(dataSet *data);
-solution *KP_greedy(dataSet* dsptr);
-solution * KP_LP(dataSet* dsptr);
 int sumWeight(int n, int * a);
+
+/**
+* calcSol : compute the objectiv value for the givens solution and dataset
+*/
+void recalcSol(solution *sol, dataSet *data);
 
 
 #endif //TP3FUNCTIONS_H
