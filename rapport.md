@@ -24,7 +24,8 @@ TODO
 ### Question 1 :
 TODO
 ### Question 2 :
-TODO 
+
+// TODO 
 ### Question 3 :
 #### 1)
 TODO
@@ -36,14 +37,26 @@ TODO
 ---
 
 ## TP3
-### Question 1 :
-TODO
-### Question 2 :
-TODO
-### Question 3 :
-TODO
-### Conclusion TP3:
-TODO
+
+
+Voici un graphique représentant la proportion de variable réduite selon le nombre de variables.
+
+![percentage of preprocessed.png](TP3/imgs/percentage%20of%20preprocessed.png)
+
+
+Avec notre implémentation, l'amélioration des performances est existente mais minime (de l'ordre de
+quelques millisecondes).
+Cependant,
+on observe très clairement (et de façon plutôt logique)
+une augmentation du temps de pre-processing en augmentant le nombre de variable
+
+![dataset.txt](TP3/dataset.txt)
+
+
+Le preprocessing de variable semble être un moyen prometteur de réduire la charge de calcul
+lors de l'optimisation linéaire. 
+
+
 
 ## Conclusion
 C'était chiand

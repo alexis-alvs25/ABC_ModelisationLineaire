@@ -143,8 +143,6 @@ solution * KP_LP(dataSet* dsptr)
 
 	double * xbar = malloc(dsptr->n * sizeof(double));
 	double bbar = (double)dsptr->b;
-
-	printf("%d %d %d \n",order[0],dsptr->c[order[0]],dsptr->a[order[0]]);
 	for(int j = 0 ; j < dsptr->n ; j++)
 	{
 		if(bbar == 0)
