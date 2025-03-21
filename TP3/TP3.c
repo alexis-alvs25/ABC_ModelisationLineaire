@@ -3,6 +3,7 @@
 //
 
 #include "TP3Functions.h"
+#define MAX_COST 100
 
 int main(){
   dataSet dt;
@@ -19,6 +20,40 @@ int main(){
       printf("%dx%d + ",dta.a[i],i);
     }
     printf("%dx%d\n",dta.a[dta.n-1],dta.n-1);
+
+ /* printf("Avant le tri :\n");
+  print_items(&dt);
+
+  sort_items(&dt);
+
+  printf("Après le tri :\n");
+  print_items(&dt);
+*/
+  //execute your solution methods on the instance you just read
+//   KP_dynamic(&dt);
+
+  free(dt.c);
+  free(dt.a);
+/*
+  printf("DTA : \n");
+
+
+  printf("Avant le tri :\n");
+  print_items(&dta);
+
+  sort_items(&dta);
+
+  printf("Après le tri :\n");
+  print_items(&dta);
+
+  //execute your solution methods on the instance you just read
+  //KP_dynamic(&dta);
+*/
+  free(dta.c);
+  free(dta.a);
+  for(int l=0;l<=200;l+=10){
+    benchmarkTP3(20,42,l);
+  }
 
 
 

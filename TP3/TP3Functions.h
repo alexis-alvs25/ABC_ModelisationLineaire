@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../TP1/TP1Functions.h"
+#define DISPLAY 1
 
 
 /**
@@ -35,5 +36,12 @@ int sumWeight(int n, int * a);
 */
 void recalcSol(solution *sol, dataSet *data);
 
+void benchmarkTP3(int iteration, int seed,int n);
+
+// TP2
+int compare_ratios(const void *p1, const void *p2);
+void sort_items(dataSet *data);
+void print_items(dataSet *data);
+void KP_dynamic(dataSet * data);
 
 #endif //TP3FUNCTIONS_H

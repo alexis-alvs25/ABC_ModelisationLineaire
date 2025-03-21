@@ -17,7 +17,7 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
 
 # Rule for building the object files
-%.o: %.c
+%.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean targets
