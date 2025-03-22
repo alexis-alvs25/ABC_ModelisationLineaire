@@ -13,12 +13,19 @@ On cherche à savoir comment $n$ et $b$ affectent la compléxité, comme le pire
 On a essayé en faisant 1,000 puis 1,000,000 iterations lors de notre benchmark. 
 #### 1)
 D'abord en relaxation linéaire
+
 ![Relaxation linéaire 1000](TP1/img/lr_n_1.png)
+
 Il n'y a pas de tendance, on peut extrapoler une droite constante. Ceci est confirmé par la courbe associée à un plus grand nombre d'iterations :
+
 ![Relaxation linéaire 1000000](TP1/img/lr_n_2.png)
+
 Ensuite en glouton :
-![Glouton 1000](TP1/img/greedy_n_1.png)
-![Glouton 1000](TP1/img/greedy_n_2.png)
+
+![Glouton 1000](TP1/img/Greedy_n_1.png)
+
+![Glouton 1000](TP1/img/Greedy_n_2.png)
+
 On remarque le même comportement.
 
 #### 2)
@@ -32,9 +39,9 @@ On remarque que contrairement à $b$, la valeur de $n$ a une influence directe s
 
 Ensuite en glouton :
 
-![Glouton 1000](TP1/img/greedy_b_1.png)
+![Glouton 1000](TP1/img/Greedy_b_1.png)
 
-![Glouton 1000](TP1/img/greedy_b_2.png)
+![Glouton 1000](TP1/img/Greedy_b_2.png)
 
 On remarque le même comportement. La courbe observée n'est pas linéaire mais ressemble à une courbe polynomiale ce qui correspond à notre hypothèse.
 
