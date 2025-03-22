@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
 
 	//Create a random instance
-	//create_instance_file("instance1.csv", time(NULL));
+	create_instance_file("instance1.csv", time(NULL));
 	
 
 	int rval =0;	
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	free_dataSet(data);
 	free_solution(sol);
 
-	/* benchmark(100,1000,1000000,42); */
+	// benchmark(100,1000,1000000,42);
 
 	return rval;
 }

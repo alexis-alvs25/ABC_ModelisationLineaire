@@ -42,8 +42,8 @@ void create_instance_file(char * filePath,int seed)
 {
 	FILE * f = fopen(filePath, "w");
 	srand(seed);
-	int b = rand()%1001;				//capacite maximale
-	int n = rand()%100;					//nombre d'objets
+	int b = rand()%1000 + 1;				//capacite maximale
+	int n = rand()%100 + 1;					//nombre d'objets
 	fprintf(f,"%d,%d\n",n,b);
 
 	for(int i = 0 ; i < n ; i++)
@@ -58,9 +58,9 @@ void create_instance_file(char * filePath,int seed)
 dataSet * create_instance(int b, int n) {
 	
 	if(b == -1)
-		b = rand()%1001;
+		b = rand()%1000 + 1;
 	if(n == -1)
-		n = rand()%100;
+		n = rand()%100 + 1;
 	int * a = malloc(n * sizeof(int));
 	int * c = malloc(n * sizeof(int));
 
@@ -169,13 +169,16 @@ solution * KP_dynamic(dataSet * data) {
     return sol;
 }
 
-
 void benchmark(int n, int b, int iteration, int seed) {
 	FILE * f_dynamic_n = fopen("./benchmark/dynamic_n.csv","w");
 	FILE * f_dynamic_b = fopen("./benchmark/dynamic_b.csv","w");
 	int i = 0;
 	dataSet * data;
 	srand(seed);
+	double * time_n = calloc(1000 , sizeof(double)); //n fixé
+	double * time_b = calloc(100 , sizeof(double)); //b fixé
+	int * number_n = calloc(1000 , sizeof(int));
+	int * number_b = calloc(100 , sizeof(int));
 	for(i = 1 ; i < iteration ; i++)
 	{
 		data = create_instance(b,-1);
@@ -183,10 +186,20 @@ void benchmark(int n, int b, int iteration, int seed) {
 		solution * sol = KP_dynamic(data);
 		clock_t end = clock();
 		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		fprintf(f_dynamic_b,"%d,%d,%lf\n",data->b,data->n,time_spent);
+		time_b[data->n] += time_spent;
+		number_b[data->n] += 1;
+		//fprintf(f_dynamic_b,"%d,%d,%lf\n",data->b,data->n,time_spent);
 		free_dataSet(data);
 		free_solution(sol);
 	}
+	for(int j = 0 ; j < 100 ; j++)
+	{
+		if(number_b[j] != 0)
+			fprintf(f_dynamic_b,"%d,%lf\n",j+1,time_b[j]/(double)number_b[j]);
+		time_b[j] = 0;
+		number_b[j] = 0;
+	}
+
 	for(i = 1 ; i < iteration ; i++)
 	{
 		data = create_instance(-1,n);
@@ -194,12 +207,26 @@ void benchmark(int n, int b, int iteration, int seed) {
 		solution * sol = KP_dynamic(data);
 		clock_t end = clock();
 		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		fprintf(f_dynamic_n,"%d,%d,%lf\n",data->n,data->b,time_spent);
+		time_n[data->b] += time_spent;
+		number_n[data->b] += 1;		
+		//fprintf(f_dynamic_n,"%d,%d,%lf\n",data->n,data->b,time_spent);
 		free_dataSet(data);
 		free_solution(sol);
 	}
+	for(int j = 0 ; j < 100 ; j++)
+	{
+		if(number_n[j] != 0)
+			fprintf(f_dynamic_n,"%d,%lf\n",j+1,time_n[j]/(double)number_n[j]);
+		time_n[j] = 0;
+		number_n[j] = 0;
+	}
+
 	fclose(f_dynamic_b);
 	fclose(f_dynamic_n);
+	free(time_b);
+	free(time_n);
+	free(number_b);
+	free(number_n);
 }
 
 void free_dataSet(dataSet * set) {
