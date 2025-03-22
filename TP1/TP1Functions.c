@@ -59,11 +59,10 @@ void create_instance_file(char * filePath,int seed, int b, int n)
 
 dataSet * create_instance(int b, int n)
 {
-	
 	if(b == -1)
-		b = rand()%1001;
+		b = (rand()%100)+1;
 	if(n == -1)
-		n = rand()%100;
+		n = (rand()%100)+1;
 	int * a = malloc(n * sizeof(int));
 	int * c = malloc(n * sizeof(int));
 
@@ -175,7 +174,6 @@ solution * KP_greedy(dataSet* dsptr)
 	triSelec(dsptr, utility,order);
 
 
-
 	double * xbar = malloc(dsptr->n * sizeof(double));
 	double bbar = (double)dsptr->b;
 
@@ -227,7 +225,7 @@ void benchmark(int n, int b, int iteration,int seed)
 	int * number_n = calloc(1000 , sizeof(int));
 	int * number_b = calloc(100 , sizeof(int));
 
-	for(i = 1 ; i < iteration ; i++)
+	for(i = 1 ; i <= iteration ; i++)
 	{
 		data = create_instance(b,-1);
 		clock_t begin = clock();
@@ -249,13 +247,14 @@ void benchmark(int n, int b, int iteration,int seed)
 		number_b[j] = 0;
 	}
 
-	for(i = 1 ; i < iteration ; i++)
+	for(i = 1 ; i <= iteration ; i++)
 	{
 		data = create_instance(-1,n);
 		clock_t begin = clock();
 		solution * sol = KP_greedy(data);
 		clock_t end = clock();
 		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+		//printf("%d,%d,%d\n",data->b,data->n,i);
 		//fprintf(f_greedy_n,"%d,%d,%lf\n",data->n,data->b,time_spent);
 		time_n[data->b] += time_spent;
 		number_n[data->b] +=1;
@@ -271,7 +270,7 @@ void benchmark(int n, int b, int iteration,int seed)
 		number_n[j] = 0;
 	}
 
-	for(i = 1 ; i < iteration ; i++)
+	for(i = 1 ; i <= iteration ; i++)
 	{
 		data = create_instance(b,-1);
 		clock_t begin = clock();
@@ -291,15 +290,15 @@ void benchmark(int n, int b, int iteration,int seed)
 			fprintf(f_lr_b,"%d,%lf\n",j+1,time_b[j]/(double)number_b[j]);
 	}
 
-	for(i = 1 ; i < iteration ; i++)
+	for(i = 1 ; i <= iteration ; i++)
 	{
 		data = create_instance(-1,n);
 		clock_t begin = clock();
 		solution * sol = KP_LP(data);
 		clock_t end = clock();
 		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-		time_b[data->b] += time_spent;
-		number_b[data->b] +=1;
+		time_n[data->b] += time_spent;
+		number_n[data->b] +=1;
 		//fprintf(f_lr_n,"%d,%d,%lf\n",data->n,data->b,time_spent);
 		free_dataSet(data);
 		free_solution(sol);

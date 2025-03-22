@@ -58,7 +58,9 @@ int main(int argc, char **argv)
 	free_solution(sol);
 	free_dataSet(&data);
 	*/
-	benchmark(100,1000,300,42);
+
+
+	benchmark(100,1000,1000000,42);
 	return 0;
 }
 
