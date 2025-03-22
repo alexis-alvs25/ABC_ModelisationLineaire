@@ -266,7 +266,7 @@ void benchmark(int n, int b, int iteration,int seed)
 	for(int j = 0 ; j < 1000 ; j++)
 	{
 		if(number_n[j] != 0)
-			fprintf(f_greedy_b,"%d,%lf\n",j,time_n[j]/(double)number_n[j]);
+			fprintf(f_greedy_n,"%d,%lf\n",j,time_n[j]/(double)number_n[j]);
 		time_n[j] = 0;
 		number_n[j] = 0;
 	}
@@ -308,7 +308,7 @@ void benchmark(int n, int b, int iteration,int seed)
 	for(int j = 0 ; j < 1000 ; j++)
 	{
 		if(number_n[j] != 0)
-			fprintf(f_lr_b,"%d,%lf\n",j,time_n[j]/(double)number_n[j]);
+			fprintf(f_lr_n,"%d,%lf\n",j,time_n[j]/(double)number_n[j]);
 	}
 	free(number_b);
 	free(number_n);
