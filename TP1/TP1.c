@@ -9,6 +9,7 @@
 
 int main(int argc, char **argv)
 {	
+	
 	//File instance name
 	//-F option
         char instance_file[1024];
