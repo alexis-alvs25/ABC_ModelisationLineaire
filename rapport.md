@@ -100,7 +100,7 @@ Cependant,
 on observe très clairement (et de façon plutôt logique)
 une augmentation du temps de pre-processing en augmentant le nombre de variable
 
-![dataset.txt](TP3/img/time.png)
+![dataset.txt](TP3/imgs/time.png)
 
 
 Le preprocessing de variable semble être un moyen prometteur de réduire la charge de calcul
@@ -109,4 +109,4 @@ lors de l'optimisation linéaire.
 
 
 ## Conclusion
-C'était chiand
+Ces TPs nous ont permis de mieux appréhender les concepts vu en cours ainsi qu'étudier les méthode d'optimisation sur un problème relativement simple mais pouvant être généraliser.
