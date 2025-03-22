@@ -23,12 +23,19 @@ On remarque le même comportement.
 
 #### 2)
 D'abord en relaxation linéaire :
+
 ![Relaxation linéaire 1000](TP1/img/lr_b_1.png)
+
 On remarque que contrairement à $b$, la valeur de $n$ a une influence directe sur le temps d'éxécution.
+
 ![Relaxation linéaire 1000](TP1/img/lr_b_2.png)
+
 Ensuite en glouton :
+
 ![Glouton 1000](TP1/img/greedy_b_1.png)
+
 ![Glouton 1000](TP1/img/greedy_b_2.png)
+
 On remarque le même comportement. La courbe observée n'est pas linéaire mais ressemble à une courbe polynomiale ce qui correspond à notre hypothèse.
 
 ### Conclusion TP1 :
