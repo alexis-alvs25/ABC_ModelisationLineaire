@@ -1,3 +1,4 @@
+//TP2Functions.c
 #include "TP2Functions.h"
 #include <math.h>
 #include <stdlib.h>
@@ -5,9 +6,9 @@
 #include <sys/time.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #define MAX_COST 1000
-#define MAX(a,b) ((a) > (b) ? (a) : (b))
 
 int read_TP2_instance(FILE*fin,dataSet* dsptr)
 {
@@ -37,7 +38,7 @@ int read_TP2_instance(FILE*fin,dataSet* dsptr)
 	return rval;
 }
 
-void create_instance(char * filePath,int seed)
+void create_instance_file(char * filePath,int seed)
 {
 	FILE * f = fopen(filePath, "w");
 	srand(seed);
@@ -54,21 +55,26 @@ void create_instance(char * filePath,int seed)
 	fclose(f);
 }
 
-void triSelec(dataSet* dsptr, double * utility, int * order)
-{
-		for (int i = 0; i < dsptr->n - 1; i++) {
-        int max = i;
-        for (int j = i + 1; j < dsptr->n; j++) {
-            if (utility[j] > utility[max])
-                max = j;
-        }
-       if (max != i) {
-            double tempUt = utility[max];
-            utility[max] = utility[i];
-            utility[i] = tempUt;
-			order[i] = max;
-        }
-    }
+dataSet * create_instance(int b, int n) {
+	
+	if(b == -1)
+		b = rand()%1001;
+	if(n == -1)
+		n = rand()%100;
+	int * a = malloc(n * sizeof(int));
+	int * c = malloc(n * sizeof(int));
+
+	for(int i = 0 ; i < n ; i++)
+	{
+		a[i] = rand()%b+1;
+		c[i] = rand()%MAX_COST;
+	}
+	dataSet * dpstr = malloc(sizeof(dataSet));
+	dpstr->b = b;
+	dpstr->n = n;
+	dpstr->a = a;
+	dpstr->c = c;
+	return dpstr;
 }
 
 int compare_ratios(const void * p1, const void * p2) {
@@ -94,70 +100,115 @@ void sort_items(dataSet * data) {													//tri des objets par ordre décroi
 }
 
 void print_items(dataSet *data) {
-    printf("Objets (valeur, poids, ratio) :\n");
+    printf("Objects (value, weight, ratio) :\n");
     for (int i = 0; i < data->n; i++) {
         double ratio = (double)data->c[i] / data->a[i];
-        printf("Objet %d : valeur = %d, poids = %d, ratio = %.2f\n", i + 1, data->c[i], data->a[i], ratio);
+        printf("x%d  :  value = %d,   weight = %d,   ratio = %.2f\n", i + 1, data->c[i], data->a[i], ratio);
     }
     printf("\n");
 }
 
-void KP_dynamic(dataSet * data) {
-	
-	int i;
-	int * Z = (int *)calloc((data->b + 1), sizeof(int));
-	int * Z_temp = (int *)calloc((data->b + 1), sizeof(int));
-	int * D = (int *)calloc((data->b + 1), sizeof(int));
-
-	for (int k = 0; k < data->n; k++) {
-		for (i = data->b; i >= data->a[k]; i--) {
-			Z_temp[i] = Z[i];
-		}
-		for (i = data->a[k]; i <= data->b; i++) {
-			if (Z_temp[i - data->a[k]] + data->c[k] > Z_temp[i]) {
-				D[i] = k + 1;
-				Z[i] = MAX(Z_temp[i], Z_temp[i - data->a[k]] + data->c[k]);
-			}
-		}
+void print_solution(solution * sol, int n) {
+	printf("Max Value: %d\n", sol->max_value);
+	printf("Selected Items: ");
+	for (int i = 0; i < n; i++) {
+		if (sol->selected_items[i]) {
+			printf("x%d ", i + 1);
+		} 
 	}
-
-	int * x = (int *)calloc(data->n, sizeof(int));
-
-	i = data->b;
-	
-	while (i > 0) {
-		while (Z[i] == Z[i - 1]) {
-			i--;
-		}
-		x[D[i] - 1] = 1;
-		i -= data->a[D[i] - 1];
-	}
-
-	// Affichage des résultats
-	printf("Valeur maximale : %d", Z[data->b]);
-	printf("\nTableau Z = ");
-	for (int j = 0; j <= data->b; j++) {
-		printf("%d ", Z[j]);
-	}
-	printf("\nTableau D = ");
-	for (int j = 0; j <= data->b; j++) {
-		printf("%d ", D[j]);
-	}
-
 	printf("\n");
-    printf("Objets sélectionnés : ");
-    for (int j = 0; j < data->n; j++) {
-        if (x[j]) {
-            printf("%d ", j + 1);
+}
+
+solution * create_solution(int n) {
+    solution * sol = malloc(sizeof(solution));
+    sol->selected_items = calloc(n, sizeof(int));
+    sol->max_value = 0;  // initialisation par défaut
+    return sol;
+}
+
+solution * KP_dynamic(dataSet * data) {
+
+    solution * sol = create_solution(data->n);
+
+    int *Z = calloc(data->b + 1, sizeof(int));        // Z(y)
+    int *Z_temp = calloc(data->b + 1, sizeof(int));    // Z'(y)
+    int *D = calloc(data->b + 1, sizeof(int));         // D(y)
+
+    for (int k = 0; k < data->n; k++) {
+        // Copier Z dans Z_temp
+        for (int y = 0; y <= data->b; y++) {
+            Z_temp[y] = Z[y];
+        }
+        for (int y = data->a[k]; y <= data->b; y++) {
+            int candidate = Z_temp[y - data->a[k]] + data->c[k];
+            if (candidate > Z_temp[y]) {
+                Z[y] = candidate;
+                D[y] = k + 1;
+            }
         }
     }
-    printf("\n");
 
-	free(Z);
-	free(Z_temp);
-	free(D);
-	free(x);
+    int y = data->b;
+    while (y > 0) {
+        while (y > 0 && D[y] == 0) {
+            y--;
+        }
+        if (y <= 0)
+            break;
+        int item = D[y] - 1;
+        sol->selected_items[item] = 1;
+        y -= data->a[item];
+    }
+
+    sol->max_value = Z[data->b];
+
+    free(Z);
+    free(Z_temp);
+    free(D);
+
+    return sol;
 }
- 
 
- 
+
+void benchmark(int n, int b, int iteration, int seed) {
+	FILE * f_dynamic_n = fopen("./benchmark/dynamic_n.csv","w");
+	FILE * f_dynamic_b = fopen("./benchmark/dynamic_b.csv","w");
+	int i = 0;
+	dataSet * data;
+	srand(seed);
+	for(i = 1 ; i < iteration ; i++)
+	{
+		data = create_instance(b,-1);
+		clock_t begin = clock();
+		solution * sol = KP_dynamic(data);
+		clock_t end = clock();
+		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+		fprintf(f_dynamic_b,"%d,%d,%lf\n",data->b,data->n,time_spent);
+		free_dataSet(data);
+		free_solution(sol);
+	}
+	for(i = 1 ; i < iteration ; i++)
+	{
+		data = create_instance(-1,n);
+		clock_t begin = clock();
+		solution * sol = KP_dynamic(data);
+		clock_t end = clock();
+		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+		fprintf(f_dynamic_n,"%d,%d,%lf\n",data->n,data->b,time_spent);
+		free_dataSet(data);
+		free_solution(sol);
+	}
+	fclose(f_dynamic_b);
+	fclose(f_dynamic_n);
+}
+
+void free_dataSet(dataSet * set) {
+	free(set->c);
+	free(set->a);
+	free(set);
+}
+
+void free_solution(solution * sol) {
+	free(sol->selected_items);
+	free(sol);
+}

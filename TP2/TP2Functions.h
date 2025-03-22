@@ -1,3 +1,4 @@
+//TP2Functions.h
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -25,9 +26,20 @@ typedef struct dataSet
 
 } dataSet;
 
+typedef struct {
+	int max_value;
+	int * selected_items;
+} solution;
+
 int read_TP2_instance(FILE*fin,dataSet* dsptr);
-void create_instance(char * filePath,int seed);
+void create_instance_file(char * filePath,int seed);
 int compare_ratios(const void *p1, const void *p2);
 void sort_items(dataSet *data);
 void print_items(dataSet *data);
-void KP_dynamic(dataSet * data);
+void print_solution(solution * sol, int n);
+solution * KP_dynamic(dataSet * data);
+solution * create_solution(int n);
+void free_dataSet(dataSet * set);
+void free_solution(solution * sol);
+dataSet * create_instance(int b, int n);
+void benchmark(int n, int b, int iteration,int seed);

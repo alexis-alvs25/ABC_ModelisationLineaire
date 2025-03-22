@@ -1,3 +1,4 @@
+//TP2.c
 #include <ctype.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -11,7 +12,7 @@ int main(int argc, char **argv)
 {
 
 	//Create a random instance
-	create_instance("instance1.csv", time(NULL));
+	//create_instance_file("instance1.csv", time(NULL));
 	
 
 	int rval =0;	
@@ -40,38 +41,27 @@ int main(int argc, char **argv)
 		}
 	}
 
- 	dataSet data;
-	//Exemple du TP2
-	
-	data.n = 4;
-	data.b = 11;
-	data.a = (int *)malloc(data.n * sizeof(int));
-	data.c = (int *)malloc(data.n * sizeof(int));
-
-	data.a[0] = 5; data.c[0] = 12;
-	data.a[1] = 4; data.c[1] = 8;
-	data.a[2] = 1; data.c[2] = 2;
-	data.a[3] = 3; data.c[3] = 5;
-
+ 	dataSet * data = malloc(sizeof(dataSet));
 
 	//Open the instance file
-/* 	FILE* fin = fopen(instance_file,"r");
-	read_TP2_instance(fin,&data);
+	FILE* fin = fopen(instance_file,"r");
+	read_TP2_instance(fin,data);
 	fclose(fin);
-*/
-    printf("Avant le tri :\n");
-    print_items(&data);
 
-    sort_items(&data);
-
-    printf("Après le tri :\n");
-    print_items(&data);
+	//Exemple du TP2
+/* 	FILE* fin1 = fopen("exempleTP2.csv","r");
+	read_TP2_instance(fin1,data);
+	fclose(fin1);  */
 
 	//execute your solution methods on the instance you just read
-	KP_dynamic(&data);
+	sort_items(data);
+	print_items(data);
+	solution * sol = KP_dynamic(data);
+	print_solution(sol, data->n);
+	free_dataSet(data);
+	free_solution(sol);
 
-    free(data.c);
-    free(data.a);
+	/* benchmark(100,1000,1000000,42); */
 
 	return rval;
 }
