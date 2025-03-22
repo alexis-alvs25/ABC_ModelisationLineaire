@@ -1,3 +1,6 @@
+#ifndef TP1FUNCTIONS_H
+#define TP1FUNCTIONS_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,5 +43,7 @@ void create_instance_file(char * filePath,int seed, int b,int n);
 void free_dataSet(dataSet * set);
 void free_solution(solution * sol);
 void benchmark(int n, int b, int iteration,int seed);
+dataSet * create_instance(int b, int n);
 
 
+#endif
