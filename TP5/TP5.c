@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include "TP5Functions.h"
+#define MAXSTEP 2000
 
 
 int main(int argc, char **argv)
@@ -38,25 +39,23 @@ int main(int argc, char **argv)
 				exit(0);
 		}
 	}
+	dataSet * data = create_instance2d(100, 100,10);
+	double step[MAXSTEP];
+	for(int i = 1 ; i <= MAXSTEP ; i++)
+	{
+		step[i-1] = 1.0/(double)i;
+	}
 
-	dataSet data;
-	/*
-	//Open the instance file
-	FILE* fin = fopen(instance_file,"r");
-	read_TP1_instance(fin,&data);
-	fclose(fin);
 
-	create_instance("./jaj.csv",42);
-
+fprintf(stderr,"debug2\n");
 	//execute your solution methods on the instance you just read
-	solution * sol = KP_greedy(&data);
-	print_solution(sol);
-	sol = KP_LP(&data);
-	print_solution(sol);
+	int_solution sol = knapsack2d(data,step,MAXSTEP,0.001);
+	print_final_solution(sol);
 
-	free_solution(sol);
-	free_dataSet(&data);
-	*/
+	/*free(sol->xbar);
+	free(sol);
+	free_dataSet(data);*/
+	
 	//benchmark(100,100,5);
 	return 0;
 }

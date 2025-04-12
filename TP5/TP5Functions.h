@@ -6,40 +6,23 @@
 #include <errno.h>
 #include <time.h>
 #include <assert.h>
-
-
-
-
-typedef struct dataSet 
-{
-	//Attributes of the instance
-	//Nombre d'objets
-	int n;
-	//Capacite b
-	int b;
-	//Capacite g 
-	int g;
-
-	//Tableau d'entiers de taille n contenant la valeur de chacun des objets
-	double*c;
-	//Tableau d'entiers de taille n contenant le poids de chacun des objets
-	int*a;
-	//Tableau d'entiers de taille n contenant le poids #2 de chacun des objets
-	int*f;
-
-} dataSet;
+#include <ilcplex/cplex.h>
+#include "./TP4Functions.h"
 
 typedef struct solution {
 	double value;
-	int * xbar;
-	int size;
-	int ** xbark;
-	double * zbark;
+	double * xbar;
 } * solution;
 
+typedef struct int_solution {
+	double value;
+	int * xbar;
+	int size;
+} * int_solution;
+
 int read_TP5_instance(FILE*fin,dataSet* dsptr);
-void print_solution(solution sol);
-solution knapsack2d(dataSet* dpstr,double * step, int k,double epsilon);
+void print_final_solution(int_solution sol);
+int_solution knapsack2d(dataSet* dpstr,double * step, int k,double epsilon);
 void create_instance(char * filePath,int seed, int b, int g, int n);
 void free_dataSet(dataSet * set);
 void free_solution(solution sol);

@@ -1,9 +1,10 @@
-#SYSTEM     = x86-64_osx
-#LIBFORMAT  = static_pic
-#CPLEXDIR=/Users/renaudchicoisne/Applications/IBM/ILOG/CPLEX_Studio1262/cplex
-#CPLEXBINDIR   = $(CPLEXDIR)/bin/$(BINDIST)
-#CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
-#CPLEXINCDIR   = $(CPLEXDIR)/include
+SYSTEM     = x86-64_linux
+LIBFORMAT  = static_pic
+CPLEXDIR=/opt/ibm/ILOG/CPLEX_Studio1210/cplex
+
+CPLEXBINDIR   = $(CPLEXDIR)/bin/$(BINDIST)
+CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
+CPLEXINCDIR   = $(CPLEXDIR)/include
 
 
 # CHANGEME: This should be the name of your executable
@@ -11,21 +12,21 @@ EXE = TP5
 
 # CHANGEME: Here is the name of all object files corresponding to the source
 #           code that you wrote in order to define the problem statement
-OBJS = TP5Functions.o TP5.o 
+OBJS = TP5Functions.o TP5.o TP4Functions.o 
 
 # CHANGEME: Additional libraries
-#ADDLIBS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -m64 -lm -lpthread
+ADDLIBS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -m64 -lm -lpthread -ldl
 
 # CHANGEME: Additional flags for compilation (e.g., include flags)
-#DEFINES= -DSYS_UNIX=1 
+DEFINES= -DSYS_UNIX=1 
 
-#INCL = -I$(CPLEXINCDIR) -g $(DEFINES)
+INCL = -I$(CPLEXINCDIR) -g $(DEFINES)
 
 # C Compiler command
 CC = gcc
 
 # C Compiler options
-CFLAGS =  -O2 -DNDEBUG 
+CFLAGS = -m64 -fPIC -fexceptions -O2 -pipe -DNDEBUG -Wall
 
 CYGPATH_W = echo
 

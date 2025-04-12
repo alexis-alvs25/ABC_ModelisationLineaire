@@ -8,8 +8,19 @@
 #include <string.h>
 #include <float.h>
 
+
 #define MAX_COST 10
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
+
+void print_final_solution(int_solution sol)
+{
+	printf("Value : %lf \nWith variable :\n",sol->value);
+	for(int i = 0 ; i < sol->size - 1; i++)
+	{
+		printf("x_%d = %d,",i,sol->xbar[i]);
+	}
+	printf("x_%d = %d\n",sol->size - 1,sol->xbar[sol->size - 1]);
+}
 
 int read_TP5_instance(FILE*fin,dataSet* dsptr)
 {
@@ -32,7 +43,7 @@ int read_TP5_instance(FILE*fin,dataSet* dsptr)
 
 	int i;
 	for( i = 0 ; i < n ; i++)
-		rval = fscanf(fin,"%d,%d,%d\n",&(dsptr->c[i]),&(dsptr->a[i]),&(dsptr->f[i]));
+		rval = fscanf(fin,"%lf,%d,%d\n",&(dsptr->c[i]),&(dsptr->a[i]),&(dsptr->f[i]));
 
 	fprintf(stderr,"\nInstance file read, we have capacites [b,g] = [%d,%d] and there is %d items of values/weights:\n",
 			b,g,n);
@@ -41,171 +52,26 @@ int read_TP5_instance(FILE*fin,dataSet* dsptr)
 
 
 	for( i = 0 ; i < n ; i++)
-		fprintf(stderr,"%d\t%d\t%d\t%d\n",i,dsptr->c[i],dsptr->a[i],dsptr->f[i]);
+		fprintf(stderr,"%d\t%lf\t%d\t%d\n",i,dsptr->c[i],dsptr->a[i],dsptr->f[i]);
 	fprintf(stderr,"\n");
 
 	return rval;
 }
 
-void create_instance(char * filePath,int seed, int b, int g, int n)
-{
-	FILE * f = fopen(filePath, "w");
-	srand(seed);
-	if(b == -1)
-		b = rand()%1000;
-	if(g == -1)
-		g = rand()%1000;
-	if(n == -1)
-		n = rand()%100;
-	fprintf(f,"%d,%d;%d\n",n,b,g);
-
-	for(int i = 0 ; i < n ; i++)
-	{
-		int a = rand()%b+1;
-		int d = rand()%g+1;
-		int c = rand()%MAX_COST;
-		fprintf(f,"%d,%d,%d\n",c,a,d);
-	}
-	fclose(f);
-
-}
-
-
-
-void triSelec(dataSet* dsptr, double * utility, int * order)
-{
-		for (int i = 0; i < dsptr->n - 1; i++) {
-        int max = i;
-        for (int j = i + 1; j < dsptr->n; j++) {
-            if (utility[j] > utility[max])
-                max = j;
-        }
-       if (max != i) {
-            double tempUt = utility[max];
-            utility[max] = utility[i];
-            utility[i] = tempUt;
-			order[i] = max;
-        }
-    }
-}
-
-solution create_solution(int * xbar, dataSet * dsptr)
-{
-	solution sol = malloc(sizeof(solution));
-	sol->xbar = xbar;
-	sol->value = 0;
-	for(int i = 0 ; i < dsptr->n ; i++)
-	{
-		sol->value += dsptr->c[i] * xbar[i];
-	}
-	sol->size = dsptr->n;
-	sol->xbark = NULL;
-	sol->zbark = NULL;
-	return sol;
-}
-
-void print_solution(solution sol)
-{
-	printf("Value : %lf\nWith variable : ",sol->value);
-	for(int i = 0 ; i < sol->size - 1; i++)
-	{
-		printf("x_%d = %lf,",i,sol->xbar[i]);
-	}
-	printf("x_%d = %lf\n",sol->size - 1,sol->xbar[sol->size - 1]);
-}
-
-
-void free_dataSet(dataSet * set)
-{
-	free(set->a);
-	free(set->c);
-}
-
 void free_solution(solution sol)
 {
 	free(sol->xbar);
-	if(sol->xbark != NULL)
-	{
-		free(sol->xbark);
-	}
-	if(sol->zbark != NULL)
-	{
-		free(sol->zbark);
-	}
-	free(sol);
-	
+	free(sol);	
 }
 
-void print_solution_csv(solution sol, const char * path)
+solution create_solution(int val, dataSet * dsptr)
 {
-	FILE * f = fopen(path,"w");
-		fprintf(f,"objective,%lf;\n",sol->value);
-		fprintf(f,"x");
-		for(int i = 0 ; i < sol->size ; i++)
-		{
-			fprintf(f,",%lf",sol->xbar[i]);
-		}
-		fprintf(f,";\n");
-		fclose(f);
-
+	solution sol = malloc(sizeof(struct solution));
+	sol->value = val;
+	sol->xbar =  (&(dsptr->master))->x;
+	return sol;
 }
 
-solution KP_dynamic(dataSet * data) {
-	
-	int i;
-	int * Z = (int *)calloc((data->b + 1), sizeof(int));
-	int * Z_temp = (int *)calloc((data->b + 1), sizeof(int));
-	int * D = (int *)calloc((data->b + 1), sizeof(int));
-
-	for (int k = 0; k < data->n; k++) {
-		for (i = data->b; i >= data->a[k]; i--) {
-			Z_temp[i] = Z[i];
-		}
-		for (i = data->a[k]; i <= data->b; i++) {
-			if (Z_temp[i - data->a[k]] + data->c[k] > Z_temp[i]) {
-				D[i] = k + 1;
-				Z[i] = MAX(Z_temp[i], Z_temp[i - data->a[k]] + data->c[k]);
-			}
-		}
-	}
-
-	int * x = (int *)calloc(data->n, sizeof(int));
-
-	i = data->b;
-	
-	while (i > 0) {
-		while (Z[i] == Z[i - 1]) {
-			i--;
-		}
-		x[D[i] - 1] = 1;
-		i -= data->a[D[i] - 1];
-	}
-
-	// Affichage des résultats
-	printf("Valeur maximale : %d", Z[data->b]);
-	printf("\nTableau Z = ");
-	for (int j = 0; j <= data->b; j++) {
-		printf("%d ", Z[j]);
-	}
-	printf("\nTableau D = ");
-	for (int j = 0; j <= data->b; j++) {
-		printf("%d ", D[j]);
-	}
-
-	printf("\n");
-    printf("Objets sélectionnés : ");
-    for (int j = 0; j < data->n; j++) {
-        if (x[j]) {
-            printf("%d ", j + 1);
-        }
-    }
-    printf("\n");
-
-	free(Z);
-	free(Z_temp);
-	free(D);
-	return create_solution(x,data);
-}
 
 int isfeasible(solution sol, dataSet * dpstr)
 {
@@ -231,8 +97,9 @@ double zxk(solution sol, dataSet * dpstr)
 	return z;
 }
 
-solution knapsack2d(dataSet* dpstr,double * step,int size,double epsilon)
+int_solution knapsack2d(dataSet* dpstr,double * step,int size,double epsilon)
 {
+	fprintf(stderr,"debug1\n");
 	int * xbar = malloc(dpstr->n * sizeof(int));
 	double zbar = DBL_MAX;
 	double zx = 0;
@@ -252,12 +119,15 @@ solution knapsack2d(dataSet* dpstr,double * step,int size,double epsilon)
 		tmpdata->n = dpstr->n;
 		tmpdata->b = dpstr->b;
 		tmpdata->a = dpstr->a;
+		fprintf(stderr,"%d, %d\n",dpstr->n,dpstr->b);
 		for(int i = 0 ; i < dpstr->n ;i++)
 		{
 			tmpcost[i] = (double) dpstr->c[i] - lambda * (double)dpstr->f[i]; 
+			fprintf(stderr,"%d, %lf, %lf\n",dpstr->a[i],tmpcost[i],dpstr->c[i]);
 		}
 		tmpdata->c = tmpcost;
-		solution sol = KP_dynamic(tmpdata);
+		int val = solve_1DKP(tmpdata);
+		solution sol = create_solution(val,tmpdata);
 		xbark[k] = malloc(dpstr->n * sizeof(double));
 		for(int i = 0 ; i < dpstr->n ; i++)
 		{
@@ -281,83 +151,23 @@ solution knapsack2d(dataSet* dpstr,double * step,int size,double epsilon)
 
         lambda = lambda - step[k] * gamma > 0 ? lambda - step[k] * gamma > 0 : 0;
 		k++;
-		free_solution(sol);
+		//free_solution(sol);
 	}
-	free(tmpdata);
-	free(tmpcost);
+	//free(tmpdata);
+	//free(tmpcost);
 	
-	solution sol = create_solution(xbark[k-1],dpstr);
-	sol->zbark = zbark;
-	sol-> xbark = xbark;
+	int val = 0;
+	for(int i = 0 ; i < dpstr->n ; i++)
+	{
+		val += dpstr->c[i] * xbark[k-1][i];
+	}
+
+	int_solution sol = malloc(sizeof(struct int_solution));
+	sol->value = val;
+	sol->xbar = xbar;
+	sol->size = dpstr->n;
+	fprintf(stderr,"debug2\n");
 	return sol;
 }
 
-/*void benchmark(int n, int b, int iteration)
-{
-	char basei[50] = "./benchmark/instance";
-	char index[20];
-	char base[50];
-	char * lr = "_lr_";
-	char * greed = "__greedy_";
-	int i = 1;
-	dataSet data;
-	int seed = 42;
-	for(i = 1 ; i < iteration/2 ; i++)
-	{
-		strcpy(base,basei);
-		sprintf(index, "%d", i);
-		
-		strcat(base,index);
-		create_instance(base, ++seed,b,-1);
-		FILE * fin = fopen(base,"r");
-
-		read_TP1_instance(fin,&data);
-		fclose(fin);
-		solution * sol = KP_greedy(&data);
-
-		strcpy(base,basei);
-		strcat(base,greed);
-		strcat(base,index);
-
-		print_solution_csv(sol,base);
-		free_solution(sol);
-		sol = KP_LP(&data);
-		print_solution(sol);
-
-		strcpy(base,basei);
-		strcat(base,lr);
-		strcat(base,index);
-
-		print_solution_csv(sol,base);
-		free_solution(sol);
-		free_dataSet(&data);
-	}
-	for(; i <= iteration; i++)
-	{
-		strcpy(base,basei);
-		sprintf(index, "%d", i);	
-		strcat(base,index);
-		create_instance(base, ++seed,-1,n);
-		FILE * fin = fopen(base,"r");
-		read_TP1_instance(fin,&data);
-		fclose(fin);
-		solution * sol = KP_greedy(&data);
-		strcpy(base,basei);
-		strcat(base,greed);
-		strcat(base,index);
-
-		print_solution_csv(sol,base);
-		free_solution(sol);
-		sol = KP_LP(&data);
-		print_solution(sol);
-
-		strcpy(base,basei);
-		strcat(base,lr);
-		strcat(base,index);
-		print_solution_csv(sol,base);
-		free_solution(sol);
-		free_dataSet(&data);
-	}
-
-}*/
 
