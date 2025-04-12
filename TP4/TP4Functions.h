@@ -72,7 +72,7 @@ typedef struct dataSet
 
 } dataSet;
 
-
+void benchmark(int n, int b,int g, int iteration,int seed);
 int read_TP2_instance(FILE*fin,dataSet* dsptr);
 int solve_2DKP(dataSet* dsptr);
 int solve_1DKP(dataSet * dpstr);

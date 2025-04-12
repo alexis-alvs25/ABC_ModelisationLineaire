@@ -95,7 +95,58 @@ int read_TP1_instance(FILE*fin,dataSet* dsptr)
 	return rval;
 }
 
+dataSet * create_instance2d(int b, int g,int n)
+{
+	if(b == -1)
+		b = (rand()%100)+1;
+	if(n == -1)
+		n = (rand()%100)+1;
+	if(g == -1)
+		n = (rand()%100)+1;
+	int * a = malloc(n * sizeof(int));
+	int * c = malloc(n * sizeof(int));
+	int * f = malloc(n * sizeof(int));
 
+	for(int i = 0 ; i < n ; i++)
+	{
+		a[i] = rand()%b+1;
+		c[i] = rand()%MAX_COST;
+		f[i] = rand()%MAX_COST;
+
+	}
+	dataSet * dpstr = malloc(sizeof(dataSet));
+	dpstr->b = b;
+	dpstr->n = n;
+	dpstr->a = a;
+	dpstr->c = c;
+	dpstr->f = f;
+	return dpstr;
+
+}
+
+dataSet * create_instance1d(int b, int n)
+{
+	if(b == -1)
+		b = (rand()%100)+1;
+	if(n == -1)
+		n = (rand()%100)+1;
+	int * a = malloc(n * sizeof(int));
+	int * c = malloc(n * sizeof(int));
+
+	for(int i = 0 ; i < n ; i++)
+	{
+		a[i] = rand()%b+1;
+		c[i] = rand()%MAX_COST;
+	}
+	dataSet * dpstr = malloc(sizeof(dataSet));
+	dpstr->f = NULL;
+	dpstr->b = b;
+	dpstr->n = n;
+	dpstr->a = a;
+	dpstr->c = c;
+	return dpstr;
+
+}
 
 int solve_2DKP(dataSet* dsptr)
 {
@@ -453,4 +504,78 @@ int solve_1DKP(dataSet * dsptr)
 	return rval;
 }
 
+void free_dataSet(dataSet * set)
+{
+	free(set->a);
+	free(set->c);
+	if(set->f)
+		free(set->f);
+	free(set);
+}
+
+
+void benchmark(int n, int b,int g, int iteration,int seed)
+{
+	
+	FILE * f_lr_1D = fopen("./benchmark/1d.csv","w");
+	FILE * f_lr_2D = fopen("./benchmark/2d.csv","w"); 
+	int i = 0;
+	dataSet * data;
+	srand(seed);
+	double * time_1D = calloc(100 , sizeof(double)); //n fixé
+	double * time_2D = calloc(100 , sizeof(double)); //b fixé
+	int * number_1D = calloc(100 , sizeof(int));
+	int * number_2D = calloc(100 , sizeof(int));
+
+	for(i = 1 ; i <= iteration ; i++)
+	{
+		data = create_instance1d(b,-1);
+		clock_t begin = clock();
+		solve_1DKP(data);
+		clock_t end = clock();
+		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+		time_1D[data->n] += time_spent;
+		number_1D[data->n] += 1;
+		//fprintf(f_greedy_b,"%d,%d,%lf\n",data->n,data->b,time_spent);
+		free_dataSet(data);
+	}
+
+	for(int j = 0 ; j < 100 ; j++)
+	{
+		if(number_1D[j] != 0)
+			fprintf(f_lr_1D,"%d,%lf\n",j+1,time_1D[j]/(double)number_1D[j]);
+		time_1D[j] = 0;
+		number_1D[j] = 0;
+	}
+
+	for(i = 1 ; i <= iteration ; i++)
+	{
+		data = create_instance2d(b,g,-1);
+		clock_t begin = clock();
+		solve_2DKP(data);
+		clock_t end = clock();
+		double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+		//printf("%d,%d,%d\n",data->b,data->n,i);
+		//fprintf(f_greedy_n,"%d,%d,%lf\n",data->n,data->b,time_spent);
+		time_2D[data->n] += time_spent;
+		number_2D[data->n] +=1;
+		free_dataSet(data);
+	}
+
+	for(int j = 0 ; j < 100 ; j++)
+	{
+		if(number_2D[j] != 0)
+			fprintf(f_lr_2D,"%d,%lf\n",j+1,time_2D[j]/(double)number_2D[j]);
+		time_2D[j] = 0;
+		number_2D[j] = 0;
+	}
+
+	free(number_1D);
+	free(number_2D);
+	free(time_1D);
+	free(time_2D);
+	fclose(f_lr_1D);
+	fclose(f_lr_2D);
+
+}
 
