@@ -18,8 +18,13 @@ typedef struct int_solution {
 	double value;
 	int * xbar;
 	int size;
+	double gap;
+	int kmax;
+	double * zbar;
+	double * zbark;
 } * int_solution;
 
+void benchmark_TP5(int n, int b,int g, int iteration,int seed, int maxk,double * step);
 int read_TP5_instance(FILE*fin,dataSet* dsptr);
 void print_final_solution(int_solution sol);
 int_solution knapsack2d(dataSet* dpstr,double * step, int k,double epsilon);

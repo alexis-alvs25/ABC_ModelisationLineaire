@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 	//execute your solution methods on the instance you just read
 	//Exact solution
 	//solve_2DKP(&data);
-	benchmark(100, 100,100, 10000,42);
+	benchmark(100, 1000,1000, 10000,42);
 
 	return rval;
 }

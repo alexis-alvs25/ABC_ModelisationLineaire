@@ -6,9 +6,10 @@ Maximize
        + 6 x_j9 + 2 x_j10 + 5 x_j11 + 5 x_j12 + 6 x_j13 + 6 x_j14 + 7 x_j15
        + 2 x_j16 + 5 x_j17
 Subject To
- capacity_1: 5 x_j0 + 91 x_j1 + 51 x_j2 + 92 x_j3 + 59 x_j4 + 42 x_j5 + 94 x_j6
-             + 84 x_j7 + 37 x_j8 + 28 x_j9 + 45 x_j10 + 91 x_j11 + 44 x_j12
-             + 90 x_j13 + 95 x_j14 + 26 x_j15 + 76 x_j16 + 77 x_j17 <= 100
+ capacity_1: 605 x_j0 + 991 x_j1 + 351 x_j2 + 592 x_j3 + 159 x_j4 + 242 x_j5
+             + 994 x_j6 + 784 x_j7 + 737 x_j8 + 928 x_j9 + 645 x_j10
+             + 291 x_j11 + 444 x_j12 + 290 x_j13 + 195 x_j14 + 526 x_j15
+             + 76 x_j16 + 977 x_j17 <= 1000
  capacity_2: 4 x_j0 + 2 x_j1 + 6 x_j2 + 2 x_j3 + x_j4 + 8 x_j5 + 9 x_j6
              + 4 x_j7 + 8 x_j10 + 5 x_j11 + 6 x_j12 + 5 x_j13 + 9 x_j14
              + 7 x_j15 + 6 x_j17 <= 0

@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 				exit(0);
 		}
 	}
-	dataSet * data = create_instance2d(100, 100,10);
+	//dataSet * data = create_instance2d(100, 100,10);
 	double step[MAXSTEP];
 	for(int i = 1 ; i <= MAXSTEP ; i++)
 	{
@@ -49,8 +49,9 @@ int main(int argc, char **argv)
 
 fprintf(stderr,"debug2\n");
 	//execute your solution methods on the instance you just read
-	int_solution sol = knapsack2d(data,step,MAXSTEP,0.001);
-	print_final_solution(sol);
+	/*int_solution sol = knapsack2d(data,step,MAXSTEP,0.001);
+	print_final_solution(sol);*/
+	benchmark_TP5(-1, 1000,1000, 10000,42, MAXSTEP,step);
 
 	/*free(sol->xbar);
 	free(sol);

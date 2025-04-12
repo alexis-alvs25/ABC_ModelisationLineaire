@@ -102,9 +102,9 @@ dataSet * create_instance2d(int b, int g,int n)
 	if(n == -1)
 		n = (rand()%100)+1;
 	if(g == -1)
-		n = (rand()%100)+1;
+		g = (rand()%100)+1;
 	int * a = malloc(n * sizeof(int));
-	double * c = malloc(n * sizeof(int));
+	double * c = malloc(n * sizeof(double));
 	int * f = malloc(n * sizeof(int));
 
 	for(int i = 0 ; i < n ; i++)
@@ -119,6 +119,7 @@ dataSet * create_instance2d(int b, int g,int n)
 	dpstr->n = n;
 	dpstr->a = a;
 	dpstr->c = c;
+	dpstr->g = g;
 	dpstr->f = f;
 	return dpstr;
 
@@ -177,7 +178,7 @@ int solve_2DKP(dataSet* dsptr)
 	int nv = n;
 	int* a = dsptr->a;
 	int* f = dsptr->f;
-	int* c = dsptr->c;
+	double* c = dsptr->c;
 	int b = dsptr->b;
 	int g = dsptr->g;
 
@@ -204,7 +205,7 @@ int solve_2DKP(dataSet* dsptr)
 		//We generate the variable attributes
 		ip_prob_ptr->x[id] = 0;
 		ip_prob_ptr->cost[id] = c[j];
-		ip_prob_ptr->c_type[id] = 'B';
+		ip_prob_ptr->c_type[id] = 'C';
 		ip_prob_ptr->up_bound[id] = 1;
 		ip_prob_ptr->low_bound[id] = 0;
 		ip_prob_ptr->var_name[id] = (char*)malloc(sizeof(char)*1024);
@@ -370,7 +371,7 @@ int solve_1DKP(dataSet * dsptr)
 	int n = dsptr->n;
 	int nv = n;
 	int* a = dsptr->a;
-	int* c = dsptr->c;
+	double* c = dsptr->c;
 	int b = dsptr->b;
 
 	//We fill our arrays
@@ -523,7 +524,7 @@ void benchmark(int n, int b,int g, int iteration,int seed)
 	dataSet * data;
 	srand(seed);
 	double * time_1D = calloc(100 , sizeof(double)); //n fixé
-	double * time_2D = calloc(100 , sizeof(double)); //b fixé
+	double * time_2D = calloc(100 , sizeof(double)); 
 	int * number_1D = calloc(100 , sizeof(int));
 	int * number_2D = calloc(100 , sizeof(int));
 
