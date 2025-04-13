@@ -5,35 +5,54 @@ author : "FAYOLLE Bastien, ALVES Alexis, COLMERAUER Clément"
 ---
 
 ## TP4
+
 Lorsqu'il s'agissait de faire des itération de cplex, nous n'avons pas pu dépasser les 10 000 car il y a beaucoup de memory leak.
+
 ### Question 1 :
+
 Il n'y a pas besoin de faire de modification au programme pour que le knapsackD marche, il suffit de lui donner une instance 1D. Nous avons tout de même fait une fonction solve_1DKP qui est la même que la première à l'exception de la ligne de contrainte 2D retirer.
-TODO plot avec les donnée TP2
+
+
+Lors de l'exécution, on peut observer une nette différence entre 
+les temps d'exécution de cplex et ceux utilisant la programmation dynamique. 
+
+Ainsi, pour une même instance, on obtient une résolution en 
+0.002s pour la programmation dynamique, et 0.469s pour Cplex
 
 ### Question 2 :
+
 Il s'agit des fonctions create_instance1d et create_instance2d qui prennent en paramêtre n,b et g (si applicable) et génère un dataset.
 
 ### Question 3 :
+
 La relaxation linéaire à une valeur supérieur ou égale à la solution entière (ce qui est cohérent avec le cours).
 
 ### Question 4 :
+
 TODO : plot
 
 ## TP5
+
 ### Question 1 :
+
 Plutot que d'utiliser la programmation dynamique, on utilise le code cplex pour résoudre le knapsack 1D
 
 ### Question 2 :
+
 Il s'agit de la fonction create_instance2d qui prennent en paramêtre n,b et g (si applicable) et génère un dataset.
 
 ### Question 3 :
+
 La solution du dual lagrangien à une valeur supérieur ou égale à la solution optimale (ce qui est cohérent avec le cours).
 
 ### Question 4 :
+
 TODO : plot
 
 ## Question 5 :
+
 TODO plot
 
 ## Question 6 :
 Aucune idée
+f295a6eb84631171c9fb4f2c
